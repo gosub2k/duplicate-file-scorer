@@ -1,0 +1,49 @@
+name:                duplicate-file-scorer
+version:             0.1.0.0
+github:              "githubuser/duplicate-file-scorer"
+license:             BSD3
+author:              "Author name here"
+maintainer:          "example@example.com"
+copyright:           "2025 Author name here"
+
+extra-source-files:
+- README.md
+
+description:         Please see the README on GitHub at <https://github.com/githubuser/duplicate-file-scorer#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- optparse-applicative
+- text
+- regex-tdfa
+- time
+- unix
+- containers
+- process
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: app
+  exposed-modules:
+  - DuplicateScorer.Scoring
+
+executables:
+  duplicate-file-scorer-exe:
+    main:                main.hs
+    source-dirs:         .
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - duplicate-file-scorer
