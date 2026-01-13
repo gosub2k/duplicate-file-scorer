@@ -71,7 +71,7 @@ This project uses Stack for build management. The `package.yaml` file contains t
 
 2. Build the project:
    ```bash
-   stack build
+   stack init && stack build
    ```
    
    Wait a lot. This will:
