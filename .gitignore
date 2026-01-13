@@ -1,0 +1,23 @@
+# Stack build artifacts
+.stack-work/
+stack.yaml.lock
+
+# Cabal build artifacts
+dist/
+dist-newstyle/
+cabal.project.local
+cabal.project.local~
+.ghc.environment.*
+
+# Generated .cabal file (auto-generated from package.yaml)
+*.cabal
+
+# GHCi files
+.ghci.local
+.haskeline
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
