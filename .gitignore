@@ -1,6 +1,7 @@
 # Stack build artifacts
 .stack-work/
 stack.yaml.lock
+stack.yaml
 
 # Cabal build artifacts
 dist/
