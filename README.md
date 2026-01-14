@@ -84,3 +84,7 @@ This project uses Stack for build management. The `package.yaml` file contains t
    ```bash
    stack exec duplicate-file-scorer-exe
    ```
+
+# Attribution
+
+Help from Claude.
