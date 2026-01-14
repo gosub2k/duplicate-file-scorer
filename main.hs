@@ -1,7 +1,7 @@
 import qualified Options.Applicative as OA
 import qualified Data.Text as T
 import DuplicateScorer.Scoring
-    ( FileWithReason(..)
+    ( WithReason(..)
     , ScoringFunction
     , selectBestFile
     , pathLengthScore
@@ -39,8 +39,8 @@ optsParser = OA.info (parseOptions OA.<**> OA.helper)
    <> OA.header "duplicate-file-scorer - intelligently choose which duplicate file to keep")
 
 data ScoredGroup = ScoredGroup
-    { keepFile :: FileWithReason      -- ^ The file to keep
-    , removeFiles :: [FileWithReason]  -- ^ Files to remove
+    { keepFile :: WithReason FilePath      -- ^ The file to keep
+    , removeFiles :: [WithReason FilePath]  -- ^ Files to remove
     } deriving (Show, Eq)
 
 -- Parse stdin into groups of files
@@ -71,7 +71,7 @@ scoreFileGroup :: [ScoringFunction] -> FileGroup -> IO ScoredGroup
 scoreFileGroup _ [] = error "Cannot score empty file group"
 scoreFileGroup _ [singleFile] =
     return $ ScoredGroup
-        (FileWithReason singleFile "only file in group")
+        (WithReason singleFile ["only file in group"])
         []
 scoreFileGroup scoringFns files = do
     (winner, losers) <- selectBestFile scoringFns files
@@ -80,15 +80,15 @@ scoreFileGroup scoringFns files = do
 printScoredGroupAsBash :: ScoredGroup -> IO ()
 printScoredGroupAsBash group = do
     putStrLn $ "# KEEP:"
-    putStrLn $ "#  " ++ reasonFilePath (keepFile group)
-    putStrLn $ "#  (" ++ whyChosen (keepFile group) ++ ")"
+    putStrLn $ "#  " ++ value (keepFile group)
+    putStrLn $ "#  (" ++ unwords (reasons (keepFile group)) ++ ")"
     putStrLn $ "# REMOVE:"
     mapM_ printRemoveCommand (removeFiles group)
     putStrLn ""
   where
     printRemoveCommand file =
-        let command = showCommandForUser "rm" ["-v", reasonFilePath file]
-            comment = "  #" ++ whyChosen file
+        let command = showCommandForUser "rm" ["-v", value file]
+            comment = "  \t#" ++ unwords (reasons file)
         in do
             putStrLn $ command ++ comment
 
