@@ -22,7 +22,7 @@ import Data.Text (Text)
 import GHC.Generics (Generic)
 import Network.HTTP.Types
 import Network.Wai
-import Network.Wai.Handler.Warp (run)
+import Network.Wai.Handler.Warp (runSettings, setPort, setHost, defaultSettings)
 import System.IO (hGetContents, hClose)
 import System.Posix.Files (getFileStatus, getSymbolicLinkStatus, fileSize, isDirectory, isSymbolicLink, isRegularFile, FileStatus)
 import System.Process (createProcess, proc, StdStream(..), std_out, waitForProcess)
@@ -58,11 +58,14 @@ newSessions :: IO Sessions
 newSessions = newTVarIO Map.empty
 
 runServer :: Int -> IO ()
-runServer port = do
-  sessions <- newSessions
-  counter  <- newTVarIO (0 :: Int)
-  putStrLn $ "Listening on http://localhost:" ++ show port
-  run port (application counter sessions)
+runServer port =
+  let settins = setPort port $ setHost "*" $ defaultSettings
+  in
+    do
+    sessions <- newSessions
+    counter  <- newTVarIO (0 :: Int)
+    putStrLn $ "Listening on http://localhost:" ++ show port
+    runSettings settins (application counter sessions)
 
 application :: TVar Int -> Sessions -> Application
 application counter sessions req respond =
