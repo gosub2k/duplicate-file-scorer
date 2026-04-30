@@ -6,10 +6,7 @@ author:              "Author name here"
 maintainer:          "example@example.com"
 copyright:           "2025 Author name here"
 
-extra-source-files:
-- README.md
-
-description:         Please see the README on GitHub at <https://github.com/githubuser/duplicate-file-scorer#readme>
+description:         Duplicate file detection and scoring tools with web UI
 
 dependencies:
 - base >= 4.7 && < 5
@@ -20,6 +17,15 @@ dependencies:
 - unix
 - containers
 - process
+- bytestring
+- async
+- stm
+- directory
+- filepath
+- wai
+- warp
+- http-types
+- aeson
 
 ghc-options:
 - -Wall
@@ -36,11 +42,36 @@ library:
   source-dirs: app
   exposed-modules:
   - DuplicateScorer.Scoring
+  - DuplicateChecker.Hasher
+  - DuplicateChecker.FsType
+  - DuplicateChecker.Stats
+  - DuplicateChecker.Analyser
+  - DuplicateWeb.Server
 
 executables:
   duplicate-file-scorer-exe:
-    main:                main.hs
-    source-dirs:         .
+    main: Main.hs
+    source-dirs: exe-scorer
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - duplicate-file-scorer
+
+  duplicate-file-spot-checker-exe:
+    main: Main.hs
+    source-dirs: exe-checker
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - duplicate-file-scorer
+
+  duplicate-dedup-web:
+    main: Main.hs
+    source-dirs: exe-web
     ghc-options:
     - -threaded
     - -rtsopts
